@@ -11,7 +11,6 @@
     <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';</script>
 
     <style>
-        /* --- VARIABLES --- */
         :root {
             --app-bg: #ffffff;
             --header-bg: #008069; 
@@ -42,14 +41,6 @@
         .book-card { background: white; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); overflow: hidden; cursor: pointer; height: 190px; display: flex; flex-direction: column; }
         .book-cover { height: 130px; width: 100%; object-fit: cover; background: #ddd; }
         .book-info { padding: 5px; font-size: 10px; font-weight: 600; text-align: center; color: #333; flex: 1; display: flex; align-items: center; justify-content: center; }
-
-        /* PDF READER */
-        #view-book-reader { background: #333; }
-        .reader-header { background: #1a1a1a; color: white; padding: 10px; display: flex; justify-content: space-between; align-items: center; }
-        #pdf-container { flex: 1; overflow: auto; display: flex; justify-content: center; padding: 10px; }
-        canvas { box-shadow: 0 0 10px rgba(0,0,0,0.5); max-width: 100%; height: auto; }
-        .pdf-controls { background: #1a1a1a; color: white; padding: 15px; display: flex; justify-content: space-around; }
-        .pdf-btn { background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
 
         /* AUTH UI */
         #view-login, #view-signup { background: linear-gradient(180deg, #103F41 0%, #1E6B66 100%); align-items: center; padding: 30px; overflow-y: auto; color: white; }
@@ -96,6 +87,14 @@
         .fetched-user { margin-top: 15px; text-align: center; display: none; }
         .fetched-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; border: 2px solid var(--primary-btn); }
         .fetched-name { font-weight: bold; font-size: 16px; color: #333; }
+
+        /* PDF Styles */
+        #view-book-reader { background: #333; }
+        #pdf-container { flex: 1; overflow: auto; display: flex; justify-content: center; padding: 10px; }
+        canvas { box-shadow: 0 0 10px rgba(0,0,0,0.5); max-width: 100%; height: auto; }
+        .reader-header { background: #1a1a1a; color: white; padding: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .pdf-controls { background: #1a1a1a; color: white; padding: 15px; display: flex; justify-content: space-around; }
+        .pdf-btn { background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
 
     </style>
 </head>
@@ -218,7 +217,7 @@
             <div id="user-preview" class="fetched-user">
                 <img id="fp-img" src="" class="fetched-img">
                 <div id="fp-name" class="fetched-name">User Name</div>
-                <div style="font-size:12px; color:gray;">found</div>
+                <div style="font-size:12px; color:gray;">User Found</div>
             </div>
 
             <div style="display:flex; gap:10px; width:100%; margin-top:15px;">
@@ -265,7 +264,7 @@
     let currentUser = null;
     let currentChatId = null;
     let selectedMsgId = null;
-    let foundUserUid = null; // Store searched user UID
+    let foundUserUid = null;
 
     // 2. BOOKS (CDN)
     const baseUrl = "https://cdn.jsdelivr.net/gh/Gurv1432/kinder-book@main/";
@@ -347,7 +346,7 @@
     function handleLogin() {
         const e = document.getElementById('login-email').value;
         const p = document.getElementById('login-pass').value;
-        auth.signInWithEmailAndPassword(e, p).then(() => checkAuth()).catch(err => document.getElementById('login-error').innerText = err.message);
+        auth.signInWithEmailAndPassword(e, p).then(() => checkAuth()).catch(err => alert(err.message));
     }
 
     function handleSignup() {
@@ -366,6 +365,7 @@
             reader.onload = function(e) {
                 profileBase64 = e.target.result;
                 document.getElementById('preview-img').src = profileBase64;
+                document.getElementById('preview-img').style.display = 'block';
             }
             reader.readAsDataURL(input.files[0]);
         }
@@ -411,7 +411,6 @@
         document.getElementById('list-requests').style.display = tab === 'requests' ? 'block' : 'none';
     }
 
-    // --- NEW: CHECK USERNAME FUNCTION ---
     function openRequestModal() {
         document.getElementById('modal-request').style.display='flex';
         document.getElementById('user-preview').style.display='none';
@@ -437,13 +436,10 @@
                 return;
             }
 
-            // Fetch User Details to Show Image
             db.ref('users/' + foundUserUid).once('value').then(userSnap => {
                 const u = userSnap.val();
                 document.getElementById('fp-img').src = u.photo || "https://via.placeholder.com/100";
                 document.getElementById('fp-name').innerText = u.nickname;
-                
-                // Show Preview
                 document.getElementById('user-preview').style.display='block';
                 document.getElementById('btn-send-req').style.display='block';
             });
@@ -482,7 +478,9 @@
         updates[`requests/${currentUser.uid}/${uid}`] = null;
         updates[`contacts/${currentUser.uid}/${uid}`] = true;
         updates[`contacts/${uid}/${currentUser.uid}`] = true;
-        db.ref().update(updates);
+        db.ref().update(updates)
+            .then(() => alert("Request Accepted!"))
+            .catch(e => alert("Error: " + e.message));
     }
 
     function loadChats() {
