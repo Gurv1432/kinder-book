@@ -6,11 +6,12 @@
     <title>Kinder Book</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Noto+Serif+Devanagari:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';</script>
 
     <style>
+        /* --- VARIABLES --- */
         :root {
             --app-bg: #ffffff;
             --header-bg: #008069; 
@@ -31,42 +32,33 @@
         .active-view { display: flex; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* BOOK */
+        /* BOOK UI */
         #view-book-home { background: var(--book-bg); }
         .book-header { background: var(--book-header); color: white; padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .book-logo { font-family: 'Noto Serif Devanagari', serif; font-weight: 700; font-size: 18px; }
         .secret-search { background: rgba(255,255,255,0.15); border: none; padding: 8px 12px; border-radius: 4px; color: white; width: 120px; transition: 0.3s; }
         .secret-search:focus { width: 160px; background: white; color: #333; }
         .book-grid { padding: 15px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; overflow-y: auto; }
-        .book-card { background: white; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); overflow: hidden; cursor: pointer; transition: transform 0.2s; height: 190px; display: flex; flex-direction: column; }
-        .book-card:active { transform: scale(0.95); }
+        .book-card { background: white; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); overflow: hidden; cursor: pointer; height: 190px; display: flex; flex-direction: column; }
         .book-cover { height: 130px; width: 100%; object-fit: cover; background: #ddd; }
-        .book-info { padding: 5px; font-size: 10px; font-weight: 600; text-align: center; color: #333; flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; line-height: 1.2; }
+        .book-info { padding: 5px; font-size: 10px; font-weight: 600; text-align: center; color: #333; flex: 1; display: flex; align-items: center; justify-content: center; }
 
-        /* PDF */
+        /* PDF READER */
         #view-book-reader { background: #333; }
         .reader-header { background: #1a1a1a; color: white; padding: 10px; display: flex; justify-content: space-between; align-items: center; }
         #pdf-container { flex: 1; overflow: auto; display: flex; justify-content: center; padding: 10px; }
         canvas { box-shadow: 0 0 10px rgba(0,0,0,0.5); max-width: 100%; height: auto; }
-        .pdf-controls { background: #1a1a1a; color: white; padding: 15px; display: flex; justify-content: space-around; align-items: center; }
-        .pdf-btn { background: none; border: none; color: white; font-size: 20px; cursor: pointer; padding: 5px 15px; }
+        .pdf-controls { background: #1a1a1a; color: white; padding: 15px; display: flex; justify-content: space-around; }
+        .pdf-btn { background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
 
-        /* LOGIN */
-        #view-login, #view-signup {
-            background: linear-gradient(180deg, #103F41 0%, #1E6B66 100%);
-            align-items: center; padding: 30px; overflow-y: auto; color: white;
-        }
-        .login-logo-circle {
-            width: 100px; height: 100px; background: linear-gradient(135deg, #A4E8E0, #5FA9A3);
-            border-radius: 50%; display: flex; justify-content: center; align-items: center;
-            margin-top: 40px; margin-bottom: 20px; font-size: 40px; color: white;
-        }
-        .login-title { font-size: 36px; font-weight: 700; color: #F4C430; margin: 0; }
+        /* AUTH UI */
+        #view-login, #view-signup { background: linear-gradient(180deg, #103F41 0%, #1E6B66 100%); align-items: center; padding: 30px; overflow-y: auto; color: white; }
+        .login-logo-circle { width: 100px; height: 100px; background: linear-gradient(135deg, #A4E8E0, #5FA9A3); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-top: 40px; margin-bottom: 20px; font-size: 40px; color: white; }
         .form-input { width: 100%; padding: 15px; border-radius: 30px; border: none; font-size: 14px; background: white; margin-bottom: 15px; color: #333; }
         .primary-btn { width: 100%; padding: 15px; background: linear-gradient(90deg, #3CAea3, #2B8C84); color: white; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         .secondary-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); margin-top: 15px; }
 
-        /* CHAT */
+        /* CHAT UI */
         .wa-header { background: var(--header-bg); color: var(--header-text); padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .wa-nav { display: flex; background: var(--header-bg); color: rgba(255,255,255,0.7); }
         .wa-tab { flex: 1; text-align: center; padding: 12px; font-weight: 600; font-size: 14px; border-bottom: 3px solid transparent; cursor: pointer; }
@@ -75,10 +67,9 @@
         .chat-item { display: flex; align-items: center; padding: 12px 15px; border-bottom: 1px solid #f0f0f0; cursor: pointer; }
         .user-pic { width: 50px; height: 50px; border-radius: 50%; background: #ccc; margin-right: 15px; object-fit: cover; }
         .btn-small { padding: 5px 12px; border-radius: 20px; font-size: 12px; border: none; cursor: pointer; color: white; font-weight: 600; margin-left: 5px;}
-
+        
         #view-chat-room { background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); background-size: cover; background-color: var(--chat-bg); }
         .message-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 8px; }
-
         .msg-bubble { max-width: 75%; padding: 8px 12px; border-radius: 8px; font-size: 14px; position: relative; box-shadow: 0 1px 2px rgba(0,0,0,0.1); word-wrap: break-word; }
         .msg-sent { align-self: flex-end; background: var(--msg-out); border-top-right-radius: 0; }
         .msg-recv { align-self: flex-start; background: var(--msg-in); border-top-left-radius: 0; }
@@ -91,24 +82,27 @@
         .input-field { width: 100%; border: none; font-size: 15px; }
         .fab { position: absolute; bottom: 20px; right: 20px; width: 55px; height: 55px; background: var(--primary-btn); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer; z-index: 100; }
 
+        /* UTILS */
         #ctx-menu { position: fixed; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.2); border-radius: 5px; display: none; z-index: 500; width: 150px; }
         .ctx-item { padding: 12px; border-bottom: 1px solid #eee; cursor: pointer; font-size: 14px; }
-        .ctx-item:hover { background: #f5f5f5; }
-
         .modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 200; }
-        .modal-content { background: white; width: 85%; padding: 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .modal-content { background: white; width: 85%; padding: 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); display:flex; flex-direction: column; align-items: center; }
         .theme-grid { display: flex; gap: 10px; margin-top: 15px; }
         .theme-dot { width: 35px; height: 35px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; }
-
         .profile-upload { width: 100px; height: 100px; border-radius: 50%; background: #ddd; margin-bottom: 20px; position: relative; overflow: hidden; cursor: pointer; border: 3px solid var(--header-bg); }
         .profile-upload img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* USER FETCH PREVIEW */
+        .fetched-user { margin-top: 15px; text-align: center; display: none; }
+        .fetched-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; border: 2px solid var(--primary-btn); }
+        .fetched-name { font-weight: bold; font-size: 16px; color: #333; }
+
     </style>
 </head>
 <body>
 
 <div id="app-container">
 
-    <!-- BOOK HOME -->
     <div id="view-book-home" class="view active-view">
         <div class="book-header">
             <span class="book-logo"><i class="fas fa-book-open"></i> Kinder Book</span>
@@ -117,23 +111,19 @@
         <div class="book-grid" id="book-list"></div>
     </div>
 
-    <!-- BOOK READER -->
     <div id="view-book-reader" class="view">
         <div class="reader-header">
             <i class="fas fa-arrow-left" onclick="closeReader()" style="cursor:pointer"></i>
             <span id="pdf-title" style="font-size:12px; overflow:hidden; white-space:nowrap; width:150px;">Reading...</span>
             <div style="font-size:12px;"><span id="page-num">1</span> / <span id="page-count">--</span></div>
         </div>
-        <div id="pdf-container">
-            <canvas id="pdf-canvas"></canvas>
-        </div>
+        <div id="pdf-container"><canvas id="pdf-canvas"></canvas></div>
         <div class="pdf-controls">
             <button class="pdf-btn" onclick="prevPage()"><i class="fas fa-chevron-left"></i></button>
             <button class="pdf-btn" onclick="nextPage()"><i class="fas fa-chevron-right"></i></button>
         </div>
     </div>
 
-    <!-- LOGIN -->
     <div id="view-login" class="view">
         <div class="login-logo-circle"><i class="fas fa-comment-dots"></i></div>
         <h1 class="login-title">MeChat</h1>
@@ -145,7 +135,6 @@
         <p id="login-error" style="color:#ff6b6b; font-size:12px; margin-top:10px;"></p>
     </div>
 
-    <!-- SIGNUP -->
     <div id="view-signup" class="view">
         <h2 style="margin-top:50px;">Create Account</h2>
         <input type="email" id="signup-email" class="form-input" placeholder="Email">
@@ -156,7 +145,6 @@
         <p id="signup-error" style="color:#ff6b6b; font-size:12px; margin-top:10px;"></p>
     </div>
 
-    <!-- PROFILE -->
     <div id="view-profile-setup" class="view">
         <div class="center-box" style="padding:40px; display:flex; flex-direction:column; align-items:center;">
             <h3 style="margin-bottom:20px;">Edit Profile</h3>
@@ -172,7 +160,6 @@
         </div>
     </div>
 
-    <!-- CHAT HOME -->
     <div id="view-chat-home" class="view">
         <div class="wa-header">
             <div style="display:flex; align-items:center; gap:10px;">
@@ -188,14 +175,13 @@
             <div class="wa-tab active" id="tab-chats" onclick="switchTab('chats')">CHATS</div>
             <div class="wa-tab" id="tab-requests" onclick="switchTab('requests')">REQUESTS <span id="req-badge"></span></div>
         </div>
-
+        
         <div id="list-chats" class="chat-list"></div>
         <div id="list-requests" class="chat-list" style="display:none;"></div>
 
-        <div class="fab" onclick="document.getElementById('modal-request').style.display='flex'"><i class="fas fa-user-plus"></i></div>
+        <div class="fab" onclick="openRequestModal()"><i class="fas fa-user-plus"></i></div>
     </div>
 
-    <!-- CHAT ROOM -->
     <div id="view-chat-room" class="view">
         <div class="wa-header">
             <div style="display:flex; align-items:center; gap:10px;">
@@ -221,13 +207,22 @@
         <div class="ctx-item" onclick="editMessageInit()">Edit Message</div>
     </div>
 
-    <!-- MODALS -->
     <div id="modal-request" class="modal">
         <div class="modal-content">
             <h3>Add Friend</h3>
-            <input type="text" id="req-username" class="form-input" placeholder="Enter Username (e.g. romeo)" style="background:#f5f5f5; border:1px solid #ddd;">
-            <div style="display:flex; gap:10px;">
-                <button class="primary-btn" onclick="sendFriendRequest()">Send</button>
+            <div style="width:100%; display:flex; gap:5px;">
+                <input type="text" id="req-username" class="form-input" placeholder="Enter Username" style="background:#f5f5f5; border:1px solid #ddd; margin-bottom:5px;">
+                <button onclick="checkUsername()" style="padding:0 15px; border:none; background:var(--primary-btn); color:white; border-radius:5px; height:50px; cursor:pointer;"><i class="fas fa-search"></i></button>
+            </div>
+            
+            <div id="user-preview" class="fetched-user">
+                <img id="fp-img" src="" class="fetched-img">
+                <div id="fp-name" class="fetched-name">User Name</div>
+                <div style="font-size:12px; color:gray;">found</div>
+            </div>
+
+            <div style="display:flex; gap:10px; width:100%; margin-top:15px;">
+                <button id="btn-send-req" class="primary-btn" style="display:none;" onclick="sendFriendRequest()">Send Request</button>
                 <button class="primary-btn" style="background:#666;" onclick="document.getElementById('modal-request').style.display='none'">Close</button>
             </div>
         </div>
@@ -253,7 +248,7 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
-    // CONFIG
+    // 1. CONFIGURATION
     const firebaseConfig = {
         apiKey: "AIzaSyAwhl7FFVAeDfypJ3AO092efTzLvXgEg5U",
         authDomain: "kinderbook-fd7a6.firebaseapp.com",
@@ -270,8 +265,9 @@
     let currentUser = null;
     let currentChatId = null;
     let selectedMsgId = null;
+    let foundUserUid = null; // Store searched user UID
 
-    // BOOKS
+    // 2. BOOKS (CDN)
     const baseUrl = "https://cdn.jsdelivr.net/gh/Gurv1432/kinder-book@main/";
     const books = [
         { title: "Allahabad Diary", file: "Allahabad%20Diary.pdf", thumb: "Allahabad%20Diary%20thumb.png" },
@@ -302,14 +298,14 @@
         });
     }
 
-    // PDF
+    // 3. PDF LOGIC
     let pdfDoc=null, pageNum=1, pdfScale=1.0, pdfCanvas=document.getElementById('pdf-canvas'), pdfCtx=pdfCanvas.getContext('2d');
     function loadPDF(url, title) {
         document.getElementById('pdf-title').innerText=title;
         showView('view-book-reader');
         pdfjsLib.getDocument(url).promise.then(pdf=>{
             pdfDoc=pdf; document.getElementById('page-count').innerText=pdf.numPages; pageNum=1; renderPage(pageNum);
-        }).catch(()=>alert("Error loading PDF"));
+        }).catch(e=>alert("Error loading PDF"));
     }
     function renderPage(num) {
         pdfDoc.getPage(num).then(page=>{
@@ -325,7 +321,7 @@
     function nextPage(){if(pageNum>=pdfDoc.numPages)return;pageNum++;renderPage(pageNum);}
     function closeReader(){pdfDoc=null;showView('view-book-home');}
 
-    // TRIGGER
+    // 4. TRIGGERS
     document.querySelector('.trigger-input').addEventListener('input', (e) => {
         const val = e.target.value;
         const now = new Date();
@@ -333,13 +329,11 @@
         if(val === "8127" || val === timeCode) { e.target.value = ""; checkAuth(); }
     });
 
-    // VIEW MANAGER
     function showView(id) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view'));
         document.getElementById(id).classList.add('active-view');
     }
 
-    // AUTH
     function checkAuth() {
         if(auth.currentUser) {
             currentUser = auth.currentUser;
@@ -361,13 +355,10 @@
         const p = document.getElementById('signup-pass').value;
         const c = document.getElementById('signup-confirm').value;
         if(p !== c) return document.getElementById('signup-error').innerText = "Passwords mismatch";
-        auth.createUserWithEmailAndPassword(e, p).then(() => { 
-            alert("Created! Now setup profile.");
-            checkAuth();
-        }).catch(err => document.getElementById('signup-error').innerText = err.message);
+        auth.createUserWithEmailAndPassword(e, p).then(() => { alert("Created! Login now."); showView('view-login'); })
+        .catch(err => document.getElementById('signup-error').innerText = err.message);
     }
 
-    // PROFILE
     let profileBase64 = "";
     function previewProfileImage(input) {
         if (input.files && input.files[0]) {
@@ -393,28 +384,17 @@
 
     function saveProfile() {
         const user = document.getElementById('setup-username').value.toLowerCase().trim();
-        const nick = document.getElementById('setup-nickname').value.trim();
+        const nick = document.getElementById('setup-nickname').value;
         if(!user || !nick) return alert("Fill details");
-
-        // ✅ USERNAME PROTECTION
-        db.ref('usernames/'+user).once('value').then(snap=>{
-            if(snap.exists() && snap.val() !== currentUser.uid){
-                return alert("Username already taken!");
-            }
-
-            const updates = {};
-            updates[`users/${currentUser.uid}`] = {
-                uid: currentUser.uid, email: currentUser.email,
-                username: user, nickname: nick,
-                photo: profileBase64 || "https://via.placeholder.com/100"
-            };
-            updates[`usernames/${user}`] = currentUser.uid;
-
-            db.ref().update(updates).then(() => initChatApp());
-        });
+        
+        const updates = {};
+        updates[`users/${currentUser.uid}`] = {
+            uid: currentUser.uid, email: currentUser.email, username: user, nickname: nick, photo: profileBase64 || "https://via.placeholder.com/100"
+        };
+        updates[`usernames/${user}`] = currentUser.uid;
+        db.ref().update(updates).then(() => initChatApp());
     }
 
-    // CHAT INIT
     function initChatApp() {
         showView('view-chat-home');
         db.ref('users/'+currentUser.uid).once('value').then(s => {
@@ -431,21 +411,50 @@
         document.getElementById('list-requests').style.display = tab === 'requests' ? 'block' : 'none';
     }
 
-    // FRIEND REQUEST
-    function sendFriendRequest() {
+    // --- NEW: CHECK USERNAME FUNCTION ---
+    function openRequestModal() {
+        document.getElementById('modal-request').style.display='flex';
+        document.getElementById('user-preview').style.display='none';
+        document.getElementById('btn-send-req').style.display='none';
+        document.getElementById('req-username').value = '';
+    }
+
+    function checkUsername() {
         const target = document.getElementById('req-username').value.toLowerCase().trim();
-        if(!target) return alert("Enter Username");
+        if(!target) return;
 
-        db.ref('usernames/'+target).once('value').then(snap=>{
-            if(!snap.exists()) return alert("User not found");
-            const uid = snap.val();
-            if(uid === currentUser.uid) return alert("Cannot add self");
+        db.ref('usernames/'+target).once('value').then(snap => {
+            if(!snap.exists()) {
+                alert("User not found!");
+                document.getElementById('user-preview').style.display='none';
+                document.getElementById('btn-send-req').style.display='none';
+                return;
+            }
+            
+            foundUserUid = snap.val();
+            if(foundUserUid === currentUser.uid) {
+                alert("You cannot add yourself.");
+                return;
+            }
 
-            db.ref(`requests/${uid}/${currentUser.uid}`).set({from:currentUser.uid}).then(()=>{
-                alert("Request Sent!");
-                document.getElementById('modal-request').style.display='none';
-                document.getElementById('req-username').value="";
-            }).catch(err=>alert("Request failed: "+err.message));
+            // Fetch User Details to Show Image
+            db.ref('users/' + foundUserUid).once('value').then(userSnap => {
+                const u = userSnap.val();
+                document.getElementById('fp-img').src = u.photo || "https://via.placeholder.com/100";
+                document.getElementById('fp-name').innerText = u.nickname;
+                
+                // Show Preview
+                document.getElementById('user-preview').style.display='block';
+                document.getElementById('btn-send-req').style.display='block';
+            });
+        });
+    }
+
+    function sendFriendRequest() {
+        if(!foundUserUid) return;
+        db.ref(`requests/${foundUserUid}/${currentUser.uid}`).set({from:currentUser.uid}).then(()=>{
+            alert("Request Sent Successfully!"); 
+            document.getElementById('modal-request').style.display='none';
         });
     }
 
@@ -454,11 +463,9 @@
             const list = document.getElementById('list-requests');
             list.innerHTML = "";
             let count = 0;
-
             snap.forEach(c => {
                 count++;
                 db.ref(`users/${c.key}`).once('value').then(u => {
-                    if(!u.exists()) return;
                     const user = u.val();
                     const div = document.createElement('div');
                     div.className = 'chat-item';
@@ -466,20 +473,16 @@
                     list.appendChild(div);
                 });
             });
-
             document.getElementById('req-badge').innerText = count > 0 ? count : "";
         });
     }
 
-    // ✅ PATCHED ACCEPT (safer)
     function acceptReq(uid) {
         const updates = {};
+        updates[`requests/${currentUser.uid}/${uid}`] = null;
         updates[`contacts/${currentUser.uid}/${uid}`] = true;
         updates[`contacts/${uid}/${currentUser.uid}`] = true;
-
-        db.ref().update(updates).then(()=>{
-            db.ref(`requests/${currentUser.uid}/${uid}`).remove();
-        }).catch(err=>alert("Accept failed: " + err.message));
+        db.ref().update(updates);
     }
 
     function loadChats() {
@@ -488,7 +491,6 @@
             list.innerHTML = "";
             snap.forEach(c => {
                 db.ref(`users/${c.key}`).once('value').then(u => {
-                    if(!u.exists()) return;
                     const user = u.val();
                     const div = document.createElement('div');
                     div.className = 'chat-item';
@@ -500,35 +502,27 @@
         });
     }
 
-    // ✅ PATCH: Chats now use members + messages
     function openChat(user) {
         currentChatId = currentUser.uid < user.uid ? `${currentUser.uid}_${user.uid}` : `${user.uid}_${currentUser.uid}`;
         document.getElementById('chat-partner-name').innerText = user.nickname;
         document.getElementById('chat-partner-img').src = user.photo;
         showView('view-chat-room');
-
+        
         const box = document.getElementById('msg-container');
         box.innerHTML = "";
-
-        db.ref(`chats/${currentChatId}/members`).update({
-            [currentUser.uid]: true,
-            [user.uid]: true
-        });
-
-        db.ref(`chats/${currentChatId}/messages`).off();
-
-        db.ref(`chats/${currentChatId}/messages`).limitToLast(50).on('child_added', snap => {
-            const msg = snap.val();
-            renderMessage(msg, snap.key);
+        
+        db.ref(`chats/${currentChatId}`).off();
+        db.ref(`chats/${currentChatId}`).limitToLast(50).on('child_added', snap => {
+            renderMessage(snap.val(), snap.key);
             box.scrollTop = box.scrollHeight;
         });
 
-        db.ref(`chats/${currentChatId}/messages`).on('child_removed', snap => {
+        db.ref(`chats/${currentChatId}`).on('child_removed', snap => {
             const el = document.getElementById(snap.key);
             if(el) el.remove();
         });
-
-        db.ref(`chats/${currentChatId}/messages`).on('child_changed', snap => {
+        
+        db.ref(`chats/${currentChatId}`).on('child_changed', snap => {
             const el = document.getElementById(snap.key);
             if(el) {
                 const msg = snap.val();
@@ -543,19 +537,20 @@
         const div = document.createElement('div');
         div.className = `msg-bubble ${isMe ? 'msg-sent' : 'msg-recv'}`;
         div.id = key;
-
+        
         if(isMe) {
-            div.oncontextmenu = (e) => { e.preventDefault(); showCtxMenu(e.clientX, e.clientY, key); };
+            div.oncontextmenu = (e) => { e.preventDefault(); showCtxMenu(e.clientX, e.clientY, key, msg.text); };
             let pressTimer;
-            div.ontouchstart = (e) => {
-                pressTimer = setTimeout(() => showCtxMenu(e.touches[0].clientX, e.touches[0].clientY, key), 800);
-            };
+            div.ontouchstart = (e) => { pressTimer = setTimeout(() => showCtxMenu(e.touches[0].clientX, e.touches[0].clientY, key, msg.text), 800); };
             div.ontouchend = () => clearTimeout(pressTimer);
         }
 
         let content = "";
-        if(msg.type === 'image') content = `<img src="${msg.image}" class="msg-image" onclick="viewImage('${msg.image}')">`;
-        else content = `<span class="msg-text">${msg.text}</span>`;
+        if(msg.type === 'image') {
+            content = `<img src="${msg.image}" class="msg-image" onclick="viewImage('${msg.image}')">`;
+        } else {
+            content = `<span class="msg-text">${msg.text}</span>`;
+        }
 
         div.innerHTML = `${content} <span class="msg-time">${new Date(msg.timestamp).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})} ${isMe ? '<i class="fas fa-check-double double-tick"></i>' : ''}</span>`;
         box.appendChild(div);
@@ -565,12 +560,8 @@
         const inp = document.getElementById('msg-input');
         const txt = inp.value.trim();
         if(!txt) return;
-
-        db.ref(`chats/${currentChatId}/messages`).push({
-            sender: currentUser.uid,
-            text: txt,
-            type: 'text',
-            timestamp: firebase.database.ServerValue.TIMESTAMP
+        db.ref(`chats/${currentChatId}`).push({
+            sender: currentUser.uid, text: txt, type: 'text', timestamp: firebase.database.ServerValue.TIMESTAMP
         });
         inp.value = "";
     }
@@ -578,21 +569,17 @@
     function sendImage() {
         const file = document.getElementById('img-input').files[0];
         if(!file) return;
-
         const reader = new FileReader();
         reader.onload = function(e) {
             const base64 = e.target.result;
-            db.ref(`chats/${currentChatId}/messages`).push({
-                sender: currentUser.uid,
-                image: base64,
-                type: 'image',
-                timestamp: firebase.database.ServerValue.TIMESTAMP
+            db.ref(`chats/${currentChatId}`).push({
+                sender: currentUser.uid, image: base64, type: 'image', timestamp: firebase.database.ServerValue.TIMESTAMP
             });
         }
         reader.readAsDataURL(file);
     }
 
-    function showCtxMenu(x, y, key) {
+    function showCtxMenu(x, y, key, text) {
         selectedMsgId = key;
         const menu = document.getElementById('ctx-menu');
         menu.style.display = 'block';
@@ -603,19 +590,13 @@
 
     function deleteMessage() {
         if(!selectedMsgId) return;
-        if(confirm("Delete this message for everyone?")) {
-            db.ref(`chats/${currentChatId}/messages/${selectedMsgId}`).remove();
-        }
+        if(confirm("Delete this message?")) db.ref(`chats/${currentChatId}/${selectedMsgId}`).remove();
     }
 
     function editMessageInit() {
         if(!selectedMsgId) return;
-        const newText = prompt("Edit your message:");
-        if(newText) {
-            db.ref(`chats/${currentChatId}/messages/${selectedMsgId}`).update({
-                text: newText
-            });
-        }
+        const newText = prompt("Edit message:");
+        if(newText) db.ref(`chats/${currentChatId}/${selectedMsgId}`).update({ text: newText });
     }
 
     function viewImage(src) {
